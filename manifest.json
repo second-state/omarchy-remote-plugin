@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.second-state.omarchy-remote",
+  "name": "Omarchy Remote",
+  "version": "0.1.0",
+  "author": "Second State",
+  "license": "MIT",
+  "description": "See what this machine exposes through omarchy-remote (Tailscale, Pangolin, Cloudflare) and copy or open each URL.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Omarchy Remote",
+    "description": "Exposed services and their URLs, from the omarchy-remote CLI.",
+    "category": "Network",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "refreshIntervalSec": 60
+    },
+    "schema": [
+      {
+        "key": "refreshIntervalSec",
+        "type": "integer",
+        "label": "Refresh interval (seconds)",
+        "min": 15,
+        "max": 3600,
+        "step": 15,
+        "defaultValue": 60
+      }
+    ]
+  }
+}
