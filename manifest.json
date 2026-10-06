@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.second-state.omarchy-remote",
   "name": "Omarchy Remote",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Second State",
   "license": "MIT",
   "description": "See what this machine exposes through omarchy-remote (Tailscale, Pangolin, Cloudflare) and copy or open each URL.",

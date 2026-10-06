@@ -240,7 +240,7 @@ Panel {
           }
 
           Text {
-            visible: root.loadedOnce && root.services.length === 0
+            visible: root.loadedOnce && root.services.length === 0 && root.lastError === ""
             width: parent.width
             text: "Run  omarchy-remote expose <name> <port>  to add one."
             color: root.dim
