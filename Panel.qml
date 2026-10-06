@@ -91,17 +91,28 @@ Panel {
     Qt.callLater(function() { keyCatcher.forceActiveFocus() })
   }
 
+  // Started through bash so a missing CLI still ends with an exit code (127);
+  // exec'ing a nonexistent path directly never reports onExited.
   Process {
     id: listProc
-    command: [root.cli, "list", "--json"]
+    command: ["bash", "-c", 'exec "$1" list --json', "bash", root.cli]
     stdout: StdioCollector { id: listStdout; waitForEnd: true }
     stderr: StdioCollector { id: listStderr; waitForEnd: true }
     onExited: function(exitCode) {
       root.loading = false
       var out = String(listStdout.text || "")
-      if (exitCode === 0 && out.trim() !== "") root.applyList(out)
-      else root.lastError = String(listStderr.text || "").trim().split("\n").pop()
-        || "omarchy-remote not found at " + root.cli
+      if (exitCode === 0 && out.trim() !== "") {
+        root.applyList(out)
+        return
+      }
+      // A non-zero exit means the CLI itself is missing or broken (provider
+      // failures come back as exit 0 with "errors"), so don't show stale rows.
+      root.services = []
+      root.desktopUp = false
+      root.loadedOnce = true
+      root.lastError = exitCode === 127
+        ? "omarchy-remote CLI not found at " + root.cli + " — install it first (see README)."
+        : (String(listStderr.text || "").trim().split("\n").pop() || "omarchy-remote failed (exit " + exitCode + ")")
     }
   }
 
@@ -196,7 +207,7 @@ Panel {
             meta: !root.loadedOnce ? (root.loading ? "Checking…" : "")
               : root.services.length === 0 ? "Nothing exposed"
               : root.services.length + " exposed · " + root.publicCount + " public"
-            detail: "Desktop service " + (root.desktopUp ? "running" : "stopped")
+            detail: root.loadedOnce && root.lastError === "" ? "Desktop service " + (root.desktopUp ? "running" : "stopped") : ""
             foreground: root.foreground
             fontFamily: root.fontFamily
             iconComponent: Component {

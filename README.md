@@ -1,5 +1,7 @@
 # Omarchy Remote — Omarchy shell plugin
 
+![Omarchy Remote panel](preview.png)
+
 A bar icon and panel for [omarchy-remote](https://github.com/second-state/omarchy-remote): it
 lists every service the machine exposes (Tailscale, Pangolin, Cloudflare) with its URL,
 provider and auth mode, and lets you copy or open each URL. The icon is dimmed when nothing
@@ -26,7 +28,21 @@ omarchy plugin add https://github.com/second-state/omarchy-remote-plugin --enabl
 - Scripts and tests can read the plugin's state, even while the screen is locked:
   `qs ipc -p "$OMARCHY_PATH/shell" call omarchy-remote state`
 
-Settings: `refreshIntervalSec` (15–3600, default 60).
+If the CLI isn't installed, the panel says so instead of showing an empty list.
+
+## Configure
+
+One setting, `refreshIntervalSec` (15–3600, default 60): how often the list is refreshed in
+the background. Change it from Omarchy's bar settings for this widget.
+
+## Remove
+
+```bash
+omarchy plugin remove io.github.second-state.omarchy-remote
+```
+
+This removes only the bar widget. The CLI and anything you exposed with it are untouched —
+use `omarchy-remote unexpose <name>` / `omarchy-remote uninstall` for those.
 
 ## Dependencies and privileges
 
